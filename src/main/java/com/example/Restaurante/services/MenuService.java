@@ -25,11 +25,11 @@ public class MenuService {
     public MenuResponseDTO createMenu(Menu registerMenuData)throws Exception{
         try {
             if(!registerMenuData.getRole().equals('A')){
-                throw new Exception("You don´t have access");
+                throw new Exception("El rol no tiene permisos para crear un plato");
             }if(validation.validatePrice(registerMenuData.getPrice())){
-                throw new Exception("Invalid Price");
+                throw new Exception("Precio Invalido");
             }if(validation.LocalValidate(registerMenuData.getLocal())){
-                throw new Exception("You must add a local first");
+                throw new Exception("Debe agregar una sede");
             }
 
             return map.TransformMenu(menuRepository.save(registerMenuData));
@@ -71,12 +71,12 @@ public class MenuService {
 
     public MenuResponseDTO updateStatus(Menu editMenuData,Integer idMenuEdit)throws Exception{try {
         if(!editMenuData.getRole().equals('A')){
-            throw new Exception("You can´t do that");
+            throw new Exception("El ROL no esta autorizado para registrar un plato");
         }
 
         Optional<Menu> menuOptional=menuRepository.findById(idMenuEdit);
         if(!menuOptional.isPresent()){
-            throw new Exception("not found");
+            throw new Exception("El plato no existe");
         }
 
         Menu menuFound=menuOptional.get();
