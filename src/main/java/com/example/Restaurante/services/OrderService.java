@@ -50,7 +50,7 @@ public class OrderService {
         }
     }
 
-  /*  public Page<OrderResponseDTO> obtenerListaPedidosPorEstadoYSede(Character rol, String local, OrderState status, int numerodeRegistros) throws Exception{
+    public Page<OrderResponseDTO> obtenerListaPedidosPorEstadoYSede(Character rol, String local, OrderState status, int numerodeRegistros) throws Exception{
         try{
 
 
@@ -60,7 +60,7 @@ public class OrderService {
         }catch (Exception error){
             throw new Exception(error.getMessage());
         }
-    }*/
+    }
 
     public OrderResponseDTO actualizarPedidoAEnPreparacion(Integer idPedido, Order datosPedido) throws Exception{
         try{
