@@ -1,9 +1,11 @@
 package com.example.Restaurante.controllers;
 
+import com.example.Restaurante.dtos.MenuResponseDTO;
 import com.example.Restaurante.dtos.OrderDTO;
 import com.example.Restaurante.dtos.OrderErrorDTO;
 import com.example.Restaurante.dtos.OrderResponseDTO;
 import com.example.Restaurante.entities.Order;
+import com.example.Restaurante.services.MenuService;
 import com.example.Restaurante.services.OrderService;
 import com.example.Restaurante.util.OrderState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class OrderController {
 
     @Autowired
     OrderService orderService;
+    @Autowired
+    MenuService menuService;
 
     @PostMapping
     public ResponseEntity<OrderDTO> registrar(@RequestBody Order order){
@@ -36,7 +40,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity <List<OrderResponseDTO>> obtenerPlatosPaginadosYFiltrados(
             @RequestParam() Character role,
             @RequestParam() OrderState category,
@@ -50,6 +54,28 @@ public class OrderController {
                     .status(HttpStatus.OK)
                     .body(listapedidos);
         }catch (Exception error){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+    }*/
+
+    @GetMapping
+    public ResponseEntity <List<MenuResponseDTO>> obtenerPlatosPaginadosYFiltrados(
+            @RequestParam() String category,
+            @RequestParam() String local,
+            @RequestParam() int registernumbers
+    ){
+        try{
+            // Llamamos al servicio para obtener la respuesta paginada
+            Page<MenuResponseDTO> platosPaginados = menuService.obtainMenuLocalCategory(category, local, registernumbers);
+
+            // Creamos una instancia de PlatoRespuestaPaginadaDTO y le pasamos la lista de platos obtenida del Page
+            List<MenuResponseDTO> listaPlatos = platosPaginados.getContent();
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(listaPlatos);
+        }catch(Exception error){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);

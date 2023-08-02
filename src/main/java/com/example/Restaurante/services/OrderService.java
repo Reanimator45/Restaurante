@@ -1,9 +1,11 @@
 package com.example.Restaurante.services;
 
+import com.example.Restaurante.dtos.MenuResponseDTO;
 import com.example.Restaurante.dtos.OrderResponseDTO;
 import com.example.Restaurante.entities.Menu;
 import com.example.Restaurante.entities.Order;
 import com.example.Restaurante.entities.OrderDetail;
+import com.example.Restaurante.maps.MenuMap;
 import com.example.Restaurante.maps.OrderMap;
 import com.example.Restaurante.repositories.MenuRepository;
 import com.example.Restaurante.repositories.OrderRepository;
@@ -26,6 +28,8 @@ public class OrderService {
     OrderRepository OrderRepository;
     @Autowired
     MenuRepository MenuRepositoriy;
+    @Autowired
+    MenuMap menuMap;
 
     public OrderResponseDTO crearPedido(Order datosDelPedido) throws Exception{
         try{
@@ -46,7 +50,7 @@ public class OrderService {
         }
     }
 
-    public Page<OrderResponseDTO> obtenerListaPedidosPorEstadoYSede(Character rol, String local, OrderState status, int numerodeRegistros) throws Exception{
+  /*  public Page<OrderResponseDTO> obtenerListaPedidosPorEstadoYSede(Character rol, String local, OrderState status, int numerodeRegistros) throws Exception{
         try{
 
 
@@ -56,7 +60,7 @@ public class OrderService {
         }catch (Exception error){
             throw new Exception(error.getMessage());
         }
-    }
+    }*/
 
     public OrderResponseDTO actualizarPedidoAEnPreparacion(Integer idPedido, Order datosPedido) throws Exception{
         try{
@@ -70,6 +74,20 @@ public class OrderService {
             pedidoExistente.setStatus(OrderState.IN_PROCESS);
             return OrderMap.transformOrder(OrderRepository.save(pedidoExistente));
         }catch (Exception error){
+            throw new Exception(error.getMessage());
+        }
+    }
+
+    public Page<MenuResponseDTO> obtainMenuLocalCategory(String category, String local, Integer registernumbers) throws Exception{
+        try{
+
+            Pageable Pagerli= PageRequest.of(0, registernumbers);
+
+            Page<Menu> menuPagerFinded=MenuRepositoriy.findByCategoryAndLocal(category,local,Pagerli);
+
+            return menuPagerFinded.map(Menu -> menuMap.TransformMenu(Menu));
+
+        }catch(Exception error){
             throw new Exception(error.getMessage());
         }
     }
