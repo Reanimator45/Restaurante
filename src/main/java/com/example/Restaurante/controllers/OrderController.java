@@ -40,8 +40,8 @@ public class OrderController {
         }
     }
 
-    /*@GetMapping
-    public ResponseEntity <List<OrderResponseDTO>> obtenerPlatosPaginadosYFiltrados(
+    @GetMapping
+    public ResponseEntity <List<OrderResponseDTO>> obtenerOrderPaginadosYFiltrados(
             @RequestParam() Character role,
             @RequestParam() OrderState category,
             @RequestParam() String local,
@@ -58,9 +58,9 @@ public class OrderController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
-    }*/
+    }
 
-    @GetMapping
+    @GetMapping("/menu")
     public ResponseEntity <List<MenuResponseDTO>> obtenerPlatosPaginadosYFiltrados(
             @RequestParam() String category,
             @RequestParam() String local,
