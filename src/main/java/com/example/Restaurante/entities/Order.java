@@ -28,6 +28,10 @@ public class Order {
     @JoinColumn(name = "order_id")
     private List<OrderDetail> details;
 
+    @Column(name = "employee_asigned")
+    private Character EmpleoyeeAsigned;
+
+
 
 
     public Integer getOrder() {
@@ -78,15 +82,24 @@ public class Order {
         this.status = status;
     }
 
+    public Character getEmpleoyeeAsigned() {
+        return EmpleoyeeAsigned;
+    }
+
+    public void setEmpleoyeeAsigned(Character empleoyeeAsigned) {
+        EmpleoyeeAsigned = empleoyeeAsigned;
+    }
+
     public Order() {
     }
 
 
-    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details) {
+    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details, Character empleoyeeAsigned) {
         this.id = id;
         this.role = role;
         this.local = local;
         this.status = status;
         this.details = details;
+        EmpleoyeeAsigned = empleoyeeAsigned;
     }
 }

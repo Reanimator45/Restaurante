@@ -1,6 +1,6 @@
 package com.example.Restaurante.validations;
 
-import com.example.Restaurante.entities.Menu;
+
 import com.example.Restaurante.entities.Order;
 
 public class OrderValidation {

@@ -5,6 +5,9 @@ import com.example.Restaurante.dtos.OrderDTO;
 import com.example.Restaurante.dtos.OrderErrorDTO;
 import com.example.Restaurante.dtos.OrderResponseDTO;
 import com.example.Restaurante.entities.Order;
+import com.example.Restaurante.maps.MenuMap;
+import com.example.Restaurante.maps.OrderMap;
+import com.example.Restaurante.repositories.OrderRepository;
 import com.example.Restaurante.services.MenuService;
 import com.example.Restaurante.services.OrderService;
 import com.example.Restaurante.util.OrderState;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("restauranteAPI/pedido")
@@ -24,6 +28,12 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     MenuService menuService;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    OrderMap orderMap;
 
     @PostMapping
     public ResponseEntity<OrderDTO> registrar(@RequestBody Order order){
@@ -90,6 +100,39 @@ public class OrderController {
                     .body(orderService.actualizarPedidoAEnPreparacion(id,datosPedido));
         }catch(Exception error){
             OrderErrorDTO respuestaError= new OrderErrorDTO();
+            respuestaError.setErrorMsg(error.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(respuestaError);
+        }
+    }
+
+    @PostMapping("/{id}/asignar")
+    public ResponseEntity<OrderDTO> asignarPedidoAPropietario(@PathVariable Integer id) {
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(orderService.asignarPedidoAPropietario(id));
+        } catch (Exception error) {
+            OrderErrorDTO respuestaError = new OrderErrorDTO();
+            respuestaError.setErrorMsg(error.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(respuestaError);
+        }
+    }
+
+
+
+
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<OrderDTO> cambiarEstadoDelPedido(@PathVariable Integer id, @RequestParam OrderState estado) {
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(orderService.cambiarEstadoDelPedido(id, estado));
+        } catch (Exception error) {
+            OrderErrorDTO respuestaError = new OrderErrorDTO();
             respuestaError.setErrorMsg(error.getMessage());
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

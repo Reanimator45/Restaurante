@@ -50,17 +50,21 @@ public class OrderService {
         }
     }
 
-    public Page<OrderResponseDTO> obtenerListaPedidosPorEstadoYSede(Character rol, String local, OrderState status, int numerodeRegistros) throws Exception{
-        try{
-
+    public Page<OrderResponseDTO> obtenerListaPedidosPorEstadoYSede(Character role, String local, OrderState status, int numerodeRegistros) throws Exception {
+        try {
+            // Verificamos que el usuario sea el propietario/administrador de la sede
+            if (role != 'P' || !local.equals("#" + role)) {
+                throw new Exception("No tienes permisos para acceder a los pedidos de esta sede");
+            }
 
             Pageable pager = PageRequest.of(0, numerodeRegistros);
-            Page<Order> ordersPaged= OrderRepository.findByLocalAndStatus(local,status,pager);
+            Page<Order> ordersPaged = OrderRepository.findByLocalAndStatus(local, status, pager);
             return ordersPaged.map(order -> OrderMap.transformOrder(order));
-        }catch (Exception error){
+        } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
+
 
     public OrderResponseDTO actualizarPedidoAEnPreparacion(Integer idPedido, Order datosPedido) throws Exception{
         try{
@@ -91,6 +95,44 @@ public class OrderService {
             throw new Exception(error.getMessage());
         }
     }
+
+    public OrderResponseDTO asignarPedidoAPropietario(Integer idPedido) throws Exception {
+        try {
+            // Aquí puedes obtener el propietario/administrador como sea necesario
+            Character role = 'P'; // Por ejemplo, supongamos que el propietario/administrador es 'P'
+
+            Optional<Order> pedidoOpcional = OrderRepository.findById(idPedido);
+            if (pedidoOpcional.isEmpty()) {
+                throw new Exception("El pedido no existe");
+            }
+            Order pedidoExistente = pedidoOpcional.get();
+            pedidoExistente.setRole(role); // Asignamos el pedido al propietario/administrador
+            pedidoExistente.setEmpleoyeeAsigned(role); // Establecemos el rol del propietario/administrador como EmpleadoAsignado
+            return OrderMap.transformOrder(OrderRepository.save(pedidoExistente));
+        } catch (Exception error) {
+            throw new Exception(error.getMessage());
+        }
+    }
+
+
+
+    public OrderResponseDTO cambiarEstadoDelPedido(Integer idPedido, OrderState estado) throws Exception {
+        try {
+            Optional<Order> pedidoOpcional = OrderRepository.findById(idPedido);
+            if (pedidoOpcional.isEmpty()) {
+                throw new Exception("El pedido no existe");
+            }
+            Order pedidoExistente = pedidoOpcional.get();
+            pedidoExistente.setStatus(estado); // Cambiamos el estado del pedido según el valor proporcionado
+            return OrderMap.transformOrder(OrderRepository.save(pedidoExistente));
+        } catch (Exception error) {
+            throw new Exception(error.getMessage());
+        }
+    }
+
+
+
+
 
 
 }
