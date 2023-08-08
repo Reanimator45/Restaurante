@@ -39,6 +39,9 @@ public class OrderService {
     @Autowired
     Sms sms;
 
+    public OrderService(com.example.Restaurante.maps.OrderMap orderMapMock, com.example.Restaurante.repositories.OrderRepository orderRepositoryMock, MenuRepository menuRepositoryMock, MenuMap menuMapMock) {
+    }
+
     public OrderResponseDTO crearPedido(Order datosDelPedido) throws Exception{
         try{
 
