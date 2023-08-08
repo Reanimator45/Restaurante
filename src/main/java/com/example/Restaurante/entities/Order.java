@@ -1,6 +1,7 @@
 package com.example.Restaurante.entities;
 
 import com.example.Restaurante.util.OrderState;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -27,6 +28,11 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private List<OrderDetail> details;
+
+   @ManyToOne
+   @JsonBackReference//para listar = poner numeros
+    @JoinColumn(name = "EmployeeId")
+   private Employee employeeid = null;
 
 
 
@@ -78,6 +84,14 @@ public class Order {
         this.status = status;
     }
 
+    public Employee getEmployeeid() {
+        return employeeid;
+    }
+
+    public void setEmployeeid(Employee employeeid) {
+        this.employeeid = employeeid;
+    }
+
     public Order() {
     }
 
@@ -88,5 +102,9 @@ public class Order {
         this.local = local;
         this.status = status;
         this.details = details;
+    }
+
+    public Order(Employee employeeid) {
+        this.employeeid = employeeid;
     }
 }

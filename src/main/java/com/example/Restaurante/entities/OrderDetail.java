@@ -2,6 +2,8 @@ package com.example.Restaurante.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class OrderDetail {
 
@@ -15,6 +17,7 @@ public class OrderDetail {
 
     @Column(name="quantity", nullable = false)
     private Integer quantity;
+
 
     public OrderDetail() {
     }
