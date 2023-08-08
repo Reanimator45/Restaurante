@@ -2,6 +2,7 @@ package com.example.Restaurante.entities;
 
 import com.example.Restaurante.util.OrderState;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -29,19 +30,29 @@ public class Order {
     @JoinColumn(name = "order_id")
     private List<OrderDetail> details;
 
-   @ManyToOne
-   @JsonBackReference//para listar = poner numeros
-    @JoinColumn(name = "EmployeeId")
-   private Employee employeeid = null;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "employee_id")
+    private Employee employeeId;
 
+    public Order() {
+    }
 
+    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details, Employee employeeId) {
+        this.id = id;
+        this.role = role;
+        this.local = local;
+        this.status = status;
+        this.details = details;
+        this.employeeId = employeeId;
+    }
 
-    public Integer getOrder() {
+    public Integer getId() {
         return id;
     }
 
-    public void setOrder(Integer order) {
-        this.id = order;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Character getRole() {
@@ -60,22 +71,6 @@ public class Order {
         this.local = local;
     }
 
-    public List<OrderDetail> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<OrderDetail> details) {
-        this.details = details;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public OrderState getStatus() {
         return status;
     }
@@ -84,27 +79,19 @@ public class Order {
         this.status = status;
     }
 
-    public Employee getEmployeeid() {
-        return employeeid;
+    public List<OrderDetail> getDetails() {
+        return details;
     }
 
-    public void setEmployeeid(Employee employeeid) {
-        this.employeeid = employeeid;
-    }
-
-    public Order() {
-    }
-
-
-    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details) {
-        this.id = id;
-        this.role = role;
-        this.local = local;
-        this.status = status;
+    public void setDetails(List<OrderDetail> details) {
         this.details = details;
     }
 
-    public Order(Employee employeeid) {
-        this.employeeid = employeeid;
+    public Employee getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Employee employeeId) {
+        this.employeeId = employeeId;
     }
 }
