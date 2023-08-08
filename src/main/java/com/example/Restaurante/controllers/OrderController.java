@@ -97,6 +97,23 @@ public class OrderController {
         }
     }
 
+    @PutMapping("/listo/{id}")
+    public ResponseEntity<OrderDTO> actualizarEstadoListo(@PathVariable Integer id,  @RequestBody Order datosPedido){
+        try{
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(orderService.actualizarPedidoAListo(id,datosPedido));
+        }catch(Exception error){
+            OrderErrorDTO respuestaError= new OrderErrorDTO();
+            respuestaError.setErrorMsg(error.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(respuestaError);
+        }
+    }
+
+
+
 
 
 
