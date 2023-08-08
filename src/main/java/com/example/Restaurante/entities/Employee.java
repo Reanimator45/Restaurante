@@ -1,43 +1,31 @@
 package com.example.Restaurante.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
-@Table(name="employee")
 public class Employee {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
-    private Long id;
-
+    @Column(name = "id")
+    private Integer id;
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "employeeId")
-    @JsonManagedReference
-    @JsonIgnore
-    private List<Order> orders;
+
 
     public Employee() {
     }
 
-    public Employee(Long id, String name, List<Order> orders) {
+    public Employee(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.orders = orders;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -47,13 +35,5 @@ public class Employee {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 }

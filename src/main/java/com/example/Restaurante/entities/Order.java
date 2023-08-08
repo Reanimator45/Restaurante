@@ -1,8 +1,6 @@
 package com.example.Restaurante.entities;
 
 import com.example.Restaurante.util.OrderState;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -31,20 +29,19 @@ public class Order {
     private List<OrderDetail> details;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "employee_id")
-    private Employee employeeId;
+    private Employee employeeAsigned;
 
     public Order() {
     }
 
-    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details, Employee employeeId) {
+    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details, Employee employeeAsigned) {
         this.id = id;
         this.role = role;
         this.local = local;
         this.status = status;
         this.details = details;
-        this.employeeId = employeeId;
+        this.employeeAsigned = employeeAsigned;
     }
 
     public Integer getId() {
@@ -87,11 +84,11 @@ public class Order {
         this.details = details;
     }
 
-    public Employee getEmployeeId() {
-        return employeeId;
+    public Employee getEmployeeAsigned() {
+        return employeeAsigned;
     }
 
-    public void setEmployeeId(Employee employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployeeAsigned(Employee employeeAsigned) {
+        this.employeeAsigned = employeeAsigned;
     }
 }

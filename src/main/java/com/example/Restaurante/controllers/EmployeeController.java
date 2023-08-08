@@ -1,45 +1,78 @@
 package com.example.Restaurante.controllers;
 
-import com.example.Restaurante.dtos.EmployeeDTO;
-import com.example.Restaurante.dtos.EmployeeErrorDTO;
-import com.example.Restaurante.dtos.EmployeeResponseDTO;
+import com.example.Restaurante.dtos.OrderErrorDTO;
+import com.example.Restaurante.dtos.OrderResponseDTO;
 import com.example.Restaurante.entities.Employee;
+import com.example.Restaurante.entities.Order;
 import com.example.Restaurante.services.EmployeeService;
+import com.example.Restaurante.services.OrderService;
+import com.example.Restaurante.util.OrderState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("restauranteceiba/employee")
+@RequestMapping("/employee")
 public class EmployeeController {
 
     @Autowired
-    private EmployeeService employeeService;
-    @PostMapping("/")
-    public ResponseEntity<EmployeeDTO> save(@RequestBody Employee employee) throws Exception {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.save(employee));
-        } catch (Exception Error) {
+    OrderService orderService;
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EmployeeErrorDTO(Error.getMessage()));
+    @Autowired
+    EmployeeService employeeService;
+
+    @PostMapping
+    public ResponseEntity<Employee> registrar(@RequestBody Employee employee){
+        try{
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(employeeService.createEmployee(employee));
+        }catch(Exception error){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<EmployeeDTO>> findAll() throws Exception {
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDTO>> obtenerOrderPaginadosYFiltrados(
+            @RequestParam() Character role,
+            @RequestParam() OrderState category,
+            @RequestParam() String local,
+            @RequestParam() int numerodeRegistros
+    ){
         try {
-            return ResponseEntity.ok(new ArrayList<>(employeeService.findAll()));
-        } catch (Exception e) {
-            List<EmployeeDTO> employeeDTOS = new ArrayList<>();
-            employeeDTOS.add(new EmployeeErrorDTO(e.getMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(employeeDTOS);
+            Page<OrderResponseDTO> edidosPaginados = orderService.obtenerListaPedidosPorEstadoYSede(role, local, category, numerodeRegistros);
+            List<OrderResponseDTO> listapedidos = edidosPaginados.getContent();
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(listapedidos);
+        }catch (Exception error){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 
+
+    @PostMapping("/employee/{orderId}")
+    public ResponseEntity<String> asignarEmpleado(
+            @PathVariable Integer orderId,
+            @RequestParam Integer idEmployee) {
+        try {
+            Order order = employeeService.asignarEmpleadoAPedido(orderId, idEmployee);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body("Empleado asignado correctamente al pedido");
+        } catch (Exception error) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Error al asignar el empleado al pedido: " + error.getMessage());
+        }
+    }
 
 }
