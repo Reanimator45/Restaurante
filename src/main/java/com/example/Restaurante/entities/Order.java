@@ -28,14 +28,28 @@ public class Order {
     @JoinColumn(name = "order_id")
     private List<OrderDetail> details;
 
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employeeAsigned;
 
+    public Order() {
+    }
 
-    public Integer getOrder() {
+    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details, Employee employeeAsigned) {
+        this.id = id;
+        this.role = role;
+        this.local = local;
+        this.status = status;
+        this.details = details;
+        this.employeeAsigned = employeeAsigned;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setOrder(Integer order) {
-        this.id = order;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Character getRole() {
@@ -54,22 +68,6 @@ public class Order {
         this.local = local;
     }
 
-    public List<OrderDetail> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<OrderDetail> details) {
-        this.details = details;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public OrderState getStatus() {
         return status;
     }
@@ -78,15 +76,19 @@ public class Order {
         this.status = status;
     }
 
-    public Order() {
+    public List<OrderDetail> getDetails() {
+        return details;
     }
 
-
-    public Order(Integer id, Character role, String local, OrderState status, List<OrderDetail> details) {
-        this.id = id;
-        this.role = role;
-        this.local = local;
-        this.status = status;
+    public void setDetails(List<OrderDetail> details) {
         this.details = details;
+    }
+
+    public Employee getEmployeeAsigned() {
+        return employeeAsigned;
+    }
+
+    public void setEmployeeAsigned(Employee employeeAsigned) {
+        this.employeeAsigned = employeeAsigned;
     }
 }

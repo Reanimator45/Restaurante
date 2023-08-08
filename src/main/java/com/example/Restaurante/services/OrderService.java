@@ -2,14 +2,17 @@ package com.example.Restaurante.services;
 
 import com.example.Restaurante.dtos.MenuResponseDTO;
 import com.example.Restaurante.dtos.OrderResponseDTO;
+import com.example.Restaurante.entities.Employee;
 import com.example.Restaurante.entities.Menu;
 import com.example.Restaurante.entities.Order;
 import com.example.Restaurante.entities.OrderDetail;
 import com.example.Restaurante.maps.MenuMap;
 import com.example.Restaurante.maps.OrderMap;
+import com.example.Restaurante.repositories.EmployeeRepository;
 import com.example.Restaurante.repositories.MenuRepository;
 import com.example.Restaurante.repositories.OrderRepository;
 import com.example.Restaurante.util.OrderState;
+import com.example.Restaurante.util.Sms;
 import com.example.Restaurante.validations.OrderValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,11 @@ public class OrderService {
     MenuRepository MenuRepositoriy;
     @Autowired
     MenuMap menuMap;
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    Sms sms;
 
     public OrderResponseDTO crearPedido(Order datosDelPedido) throws Exception{
         try{
@@ -78,6 +86,27 @@ public class OrderService {
         }
     }
 
+    public OrderResponseDTO actualizarPedidoAListo(Integer idPedido, Order datosPedido) throws Exception{
+        try{
+            //solo el Admin A puede cambiar el estado
+
+            Optional<Order> pedidoOpcional = OrderRepository.findById(idPedido);
+            if (pedidoOpcional.isEmpty()) {
+                throw new Exception("El pedido no existe");
+            }
+            Order pedidoExistente = pedidoOpcional.get();
+            pedidoExistente.setStatus(OrderState.READY);
+            if (pedidoExistente.getStatus()==OrderState.READY){
+                sms.sendSms("+573006458112","Danielin.. Su orden esta lista, su codigo es: 'RM08' ");
+            }
+            return OrderMap.transformOrder(OrderRepository.save(pedidoExistente));
+        }catch (Exception error){
+            throw new Exception(error.getMessage());
+        }
+    }
+
+
+
     public Page<MenuResponseDTO> obtainMenuLocalCategory(String category, String local, Integer registernumbers) throws Exception{
         try{
 
@@ -91,6 +120,8 @@ public class OrderService {
             throw new Exception(error.getMessage());
         }
     }
+
+
 
 
 }
