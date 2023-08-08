@@ -12,12 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface EmployeeMap {
 
-        @Mapping(target = "id", source = "id")
-
-        @Mapping(target = "orders", source = "orders")
-
-
-
 
     public EmployeeResponseDTO listEmployee (Employee employee);
     public List<EmployeeResponseDTO> listEmployees(List<Employee> employeeList);
